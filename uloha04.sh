@@ -7,17 +7,26 @@ sort social.txt beverly_hills.txt actor.txt | uniq -cd | grep 3 | sed 's/.*3 //'
 
 grep -oh "\".*\"" countrycodes_en.csv kodyzemi_cz.csv | tr -d '"' | sort | uniq -d
 
-# 3)
+# 3) Vytáhneme ze souboru relevantní řádky, spočítáme slova každého řádku (počet členů skupiny + 1) a napíšeme počet na začátek řádky. Výstup seřadíme (numericky) a uložíme
+# do pomocného souboru. Přečteme první charakter souboru a grepem vybereme všechny řádky které začínají na toto číslo 
+# (skupiny se stejným počtem lidí) a z těch vypíšeme pouze jméno skupiny
 
-cut -d: -f 1,4 /etc/group | { 
-while read line; 
-do 
-echo $line | sed 's/[,:]/ /g' | wc -w | tr -d '\n'; 
-echo " $line"; 
-done; 
-} | sort -nr | { 
-pocetSlov=$(head -c1);
-pocetRadku=`expr $(grep -c $pocetSlov) + 1` ;
-echo $pocetRadku ; }
+#!/bin/sh
 
-pocetSlov=$(head -c1 seznam); pocetRadku=`expr $(grep -c $pocetSlov seznam )` ; grep $pocetRadku seznam | grep -o ' .*:' | tr -d ':' | tr -d ' '
+cut -d: -f 1,4 /etc/group | {
+while read line
+do
+        echo $line | sed 's/[,:]/ /g' |
+        wc -w |
+        tr -d '\n'
+        echo " $line"
+done
+} | sort -nr >/tmp/pomocneiSoubor
+
+pocetSlov=$(head -c1 /tmp/pomocneiSoubor)
+pocetRadku=$(grep -c $pocetSlov /tmp/pomocneiSoubor)
+grep $pocetRadku /tmp/pomocneiSoubor |
+grep -o ' .*:' |
+tr -d ':' | tr -d ' '
+
+rm /tmp/pomocneiSoubor
