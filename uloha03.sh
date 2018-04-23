@@ -44,5 +44,4 @@ do
 done
 echo $pocet
 
-#Nefunguje, zde je špatně syntax, při read-while loopu dáváme soubor na vstup až na konec loopu tedy za slovo "done"
-# jako v předchozím případě
+#Nefunguje, protože při každé iteraci přečte read soubor znovu - tedy jeho první řádku. A máme nekonečný cyklus.
