@@ -13,15 +13,15 @@ BEGIN {
 ' "$1" | awk '
 BEGIN {
         RS="[[:space:]]"
-        FS="="
 }
 
 /^href=/ {
-        gsub(/\"/,"",$2)
-        gsub(/&quot/,"\"",$2)
-        gsub(/&amp/,"\\&",$2)
-        gsub(/&lt/,"<",$2)
-        gsub(/&gt/,">",$2)
-        print $2
+        gsub(/^href=/,"")
+        gsub(/\"/,"")
+        gsub(/&quot/,"\"")
+        gsub(/&amp/,"\\&")
+        gsub(/&lt/,"<")
+        gsub(/&gt/,">")
+        print
 }
 ' -
